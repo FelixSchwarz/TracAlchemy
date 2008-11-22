@@ -1,0 +1,5 @@
+.project
+TracAlchemy.egg-info
+
+syntax: glob
+*.pyc
