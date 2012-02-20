@@ -1,5 +1,6 @@
-.project
-TracAlchemy.egg-info
-
 syntax: glob
 *.pyc
+venv
+run
+*.egg-info
+TODO.txt
