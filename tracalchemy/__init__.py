@@ -11,6 +11,7 @@
 # # define your tables/mappers here
 # >>> results = session.query(MyMappedObject).filter(MyMappedObject.name=='foo')
 
-from tracalchemy.session import *
+from tracalchemy.core import *
 
+from tracalchemy.web_ui import *
 
