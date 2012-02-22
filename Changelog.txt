@@ -3,6 +3,7 @@ Changelog for TracAlchemy
 
 0.2 (??.??.2012)
 - complete rewrite to support SQLAlchemy 0.7
+- added migration support (using alembic)
 
 0.1 (22.11.2008)
 - initial version
