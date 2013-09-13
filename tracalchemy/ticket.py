@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # 
-# Copyright (c) 2012 Felix Schwarz <felix.schwarz@oss.schwarz.eu>
+# Copyright (c) 2012-2013 Felix Schwarz <felix.schwarz@oss.schwarz.eu>
 #
 # The MIT License
 # Permission is hereby granted, free of charge, to any person obtaining a copy
