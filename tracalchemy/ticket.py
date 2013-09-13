@@ -23,38 +23,35 @@
 
 import re
 
-from sqlalchemy import BigInteger, Integer, String, UnicodeText
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import BigInteger, Integer, UnicodeText
 from sqlalchemy.orm import mapper, relationship, Query
-from sqlalchemy.schema import (Column, ForeignKey, Index, MetaData,
-    PrimaryKeyConstraint, Table)
+from sqlalchemy.schema import (Column, ForeignKey, Index, PrimaryKeyConstraint,
+    Table)
+
+from tracalchemy.model_util import metadata
 
 
 __all__ = ['Ticket']
 
-
-metadata = MetaData()
-Base = declarative_base()
-
 ticket_table = Table('ticket', metadata,
     Column('id', Integer, primary_key=True, autoincrement=True),
-    Column('type', String),
+    Column('type', UnicodeText),
     Column('time', BigInteger, server_default=None),
     Column('changetime', BigInteger, server_default=None),
     
-    Column('component', String),
-    Column('severity', String),
-    Column('priority', String),
-    Column('owner', String),
-    Column('reporter', String),
-    Column('cc', String),
-    Column('version', String),
-    Column('milestone', String),
-    Column('status', String),
-    Column('resolution', String),
-    Column('summary', String),
-    Column('description', String),
-    Column('keywords', String),
+    Column('component', UnicodeText),
+    Column('severity', UnicodeText),
+    Column('priority', UnicodeText),
+    Column('owner', UnicodeText),
+    Column('reporter', UnicodeText),
+    Column('cc', UnicodeText),
+    Column('version', UnicodeText),
+    Column('milestone', UnicodeText),
+    Column('status', UnicodeText),
+    Column('resolution', UnicodeText),
+    Column('summary', UnicodeText),
+    Column('description', UnicodeText),
+    Column('keywords', UnicodeText),
     
     Index('ticket_time_idx', 'time'),
     Index('ticket_status_idx', 'status'),
