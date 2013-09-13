@@ -23,46 +23,46 @@
 
 import re
 
-from sqlalchemy import BigInteger, Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Query
-from sqlalchemy.schema import Index
+from sqlalchemy import BigInteger, Integer, String
+from sqlalchemy.orm import mapper, Query
+from sqlalchemy.schema import Column, Index, MetaData, Table
 
 
 __all__ = ['Ticket']
 
 
-Base = declarative_base()
+metadata = MetaData()
+
+ticket_table = Table('ticket', metadata,
+    Column('id', Integer, primary_key=True, autoincrement=True),
+    Column('type', String),
+    Column('time', BigInteger, server_default=None),
+    Column('changetime', BigInteger, server_default=None),
+    
+    Column('component', String),
+    Column('severity', String),
+    Column('priority', String),
+    Column('owner', String),
+    Column('reporter', String),
+    Column('cc', String),
+    Column('version', String),
+    Column('milestone', String),
+    Column('status', String),
+    Column('resolution', String),
+    Column('summary', String),
+    Column('description', String),
+    Column('keywords', String),
+    
+    Index('ticket_time_idx', 'time'),
+    Index('ticket_status_idx', 'status'),
+)
+
 
 class TicketQuery(Query):
-    pass
+    def by_id(self, ticket_id):
+        return self.filter(Ticket.id == ticket_id)
 
-
-class Ticket(Base):
-    __tablename__ = 'ticket'
-    __table_args_ = (
-        Index('ticket_time_idx', 'time'),
-        Index('ticket_status_idx', 'status'),
-    )
-    
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    type = Column(String)
-    time = Column(BigInteger, server_default=None)
-    changetime = Column(BigInteger, server_default=None)
-    component = Column(String)
-    severity = Column(String)
-    priority = Column(String)
-    owner = Column(String)
-    reporter = Column(String)
-    cc = Column(String)
-    version = Column(String)
-    milestone = Column(String)
-    status = Column(String)
-    resolution = Column(String)
-    summary = Column(String)
-    description = Column(String)
-    keywords = Column(String)
-    
+class Ticket(object):
     @classmethod
     def query(cls, session):
         return TicketQuery([cls], session=session)
@@ -99,3 +99,5 @@ class Ticket(Base):
         return tuple(ccs)
         # --- end of copy -----------------------------------------------------
 
+
+mapper(Ticket, ticket_table)
