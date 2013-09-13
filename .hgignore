@@ -4,3 +4,6 @@ venv
 run
 *.egg-info
 TODO.txt
+.settings
+.project
+.pydevproject
