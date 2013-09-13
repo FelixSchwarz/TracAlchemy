@@ -12,6 +12,7 @@ class TicketTest(TracTest):
     def setUp(self):
         self.super()
         self.env = EnvironmentStub()
+        self.session = TracAlchemy(self.env).session()
     
     def _create_trac_ticket(self, fields):
         trac_ticket = TracTicket(self.env)
@@ -29,7 +30,6 @@ class TicketTest(TracTest):
         )
         trac_ticket = self._create_trac_ticket(fields)
         
-        session = TracAlchemy(self.env).session()
-        ticket = session.query(Ticket).filter(Ticket.id == trac_ticket.id).one()
+        ticket = Ticket.query(self.session).filter(Ticket.id == trac_ticket.id).one()
         for key, value in fields.items():
             assert_equals(value, getattr(ticket, key))

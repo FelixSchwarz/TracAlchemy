@@ -23,11 +23,16 @@
 
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Query
 
 __all__ = ['Ticket']
 
 
 Base = declarative_base()
+
+class TicketQuery(Query):
+    pass
+
 
 class Ticket(Base):
     __tablename__ = 'ticket'
@@ -49,6 +54,10 @@ class Ticket(Base):
     summary = Column(String)
     description = Column(String)
     keywords = Column(String)
+    
+    @classmethod
+    def query(cls, session):
+        return TicketQuery([cls], session=session)
     
     def __repr__(self):
         columns = list(Ticket.__mapper__.columns)
