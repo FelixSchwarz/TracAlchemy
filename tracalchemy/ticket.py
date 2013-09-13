@@ -23,9 +23,10 @@
 
 import re
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import BigInteger, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Query
+from sqlalchemy.schema import Index
 
 
 __all__ = ['Ticket']
@@ -39,11 +40,15 @@ class TicketQuery(Query):
 
 class Ticket(Base):
     __tablename__ = 'ticket'
+    __table_args_ = (
+        Index('ticket_time_idx', 'time'),
+        Index('ticket_status_idx', 'status'),
+    )
     
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     type = Column(String)
-    time = Column(Integer)
-    changetime = Column(Integer)
+    time = Column(BigInteger, server_default=None)
+    changetime = Column(BigInteger, server_default=None)
     component = Column(String)
     severity = Column(String)
     priority = Column(String)

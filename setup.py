@@ -13,7 +13,9 @@ setup(
     description    = 'Adapter to make SQLAlchemy usable in Trac',
     license        = 'MIT',
     
-    install_requires = ['SQLAlchemy >= 0.4'],
+    install_requires = [
+        'SQLAlchemy >= 0.7', # __table_args__
+    ],
     extras_require = {
         'alembic': ['alembic>=0.2'],
         'tests': ['TracDevPlatformPlugin'],
