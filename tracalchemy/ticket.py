@@ -25,6 +25,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Query
 
+
 __all__ = ['Ticket']
 
 
@@ -58,6 +59,23 @@ class Ticket(Base):
     @classmethod
     def query(cls, session):
         return TicketQuery([cls], session=session)
+    
+    @classmethod
+    def example(cls, _session=None, **kwargs):
+        # Regular users should not need to install the TracDevPlatform plugin
+        # so we must not put the import in the file header.
+        # This method is only intended for testing so I guess it's ok to depend
+        # on pythonic_testcase here.
+        from trac_dev_platform.test.lib.pythonic_testcase import (assert_true,
+            assert_is_empty)
+        ticket = Ticket()
+        for key in tuple(kwargs):
+            assert_true(hasattr(ticket, key), message='Unknown attribute %r' % key)
+            setattr(ticket, key, kwargs.pop(key))
+        assert_is_empty(kwargs)
+        if _session:
+            _session.add(ticket)
+        return ticket
     
     def __repr__(self):
         columns = list(Ticket.__mapper__.columns)

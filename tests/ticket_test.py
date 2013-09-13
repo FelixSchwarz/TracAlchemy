@@ -26,10 +26,25 @@ class TicketTest(TracTest):
             reporter=u'foo',
             summary=u'a bug',
             description=u'I noticed failing tests.',
-            
         )
         trac_ticket = self._create_trac_ticket(fields)
         
         ticket = Ticket.query(self.session).filter(Ticket.id == trac_ticket.id).one()
         for key, value in fields.items():
             assert_equals(value, getattr(ticket, key))
+    
+    def test_can_create_example_ticket(self):
+        ticket = Ticket.example(_session=self.session)
+        self.session.commit()
+        
+        assert_equals(1, ticket.id)
+    
+    def test_can_override_example_data(self):
+        ticket = Ticket.example(_session=self.session, summary=u'help',
+            description=u'some description', cc=u'foo@site.example')
+        self.session.commit()
+        
+        assert_equals(1, ticket.id)
+        assert_equals(u'help', ticket.summary)
+        assert_equals(u'some description', ticket.description)
+        assert_equals(u'foo@site.example', ticket.cc)
