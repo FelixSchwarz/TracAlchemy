@@ -21,5 +21,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from tracalchemy.migration.api import *
+try:
+    from tracalchemy.migration.api import *
+except ImportError:
+    # ignore import errors due to missing alembic, for example if nosetests
+    # tries to import this module.
+    pass
+
 
