@@ -13,5 +13,3 @@
 
 from tracalchemy.core import *
 
-from tracalchemy.web_ui import *
-
