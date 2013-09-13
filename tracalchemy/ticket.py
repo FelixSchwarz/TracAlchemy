@@ -23,15 +23,18 @@
 
 import re
 
-from sqlalchemy import BigInteger, Integer, String
-from sqlalchemy.orm import mapper, Query
-from sqlalchemy.schema import Column, Index, MetaData, Table
+from sqlalchemy import BigInteger, Integer, String, UnicodeText
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import mapper, relationship, Query
+from sqlalchemy.schema import (Column, ForeignKey, Index, MetaData,
+    PrimaryKeyConstraint, Table)
 
 
 __all__ = ['Ticket']
 
 
 metadata = MetaData()
+Base = declarative_base()
 
 ticket_table = Table('ticket', metadata,
     Column('id', Integer, primary_key=True, autoincrement=True),
@@ -101,3 +104,32 @@ class Ticket(object):
 
 
 mapper(Ticket, ticket_table)
+
+# -----------------------------------------------------------------------------
+
+ticket_change_table = Table('ticket_change', metadata,
+    Column('ticket', Integer, ForeignKey('ticket.id'), nullable=False),
+    Column('time', BigInteger, nullable=False),
+    Column('author', UnicodeText),
+    Column('field', UnicodeText, nullable=False),
+    Column('oldvalue', UnicodeText),
+    Column('newvalue', UnicodeText),
+    
+    PrimaryKeyConstraint('ticket', 'time', 'field'),
+    Index('ticket_change_ticket_idx', 'ticket'),
+    Index('ticket_change_time_idx', 'time'),
+)
+
+class TicketChange(object):
+    pass
+
+
+mapper(TicketChange, ticket_change_table,
+    properties={
+        'ticket_id': ticket_change_table.c.ticket,
+        '_ticket': relationship(Ticket,
+            primaryjoin=(Ticket.id==ticket_change_table.c.ticket),
+            backref='changes'),
+    },
+)
+
