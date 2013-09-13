@@ -16,6 +16,7 @@ setup(
     install_requires = ['SQLAlchemy >= 0.4'],
     extras_require = {
         'alembic': ['alembic>=0.2'],
+        'tests': ['TracDevPlatformPlugin'],
     },
     
     packages       = ['tracalchemy'],
