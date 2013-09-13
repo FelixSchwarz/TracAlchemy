@@ -61,7 +61,6 @@ class Ticket(Base):
     
     def __repr__(self):
         columns = list(Ticket.__mapper__.columns)
-        column_names = [column.name for column in columns]
         settings = map(lambda column: column.name + '=' + repr(getattr(self, column.name)), columns)
         return 'Ticket(%s)' % ', '.join(settings)
 
