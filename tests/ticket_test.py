@@ -48,3 +48,9 @@ class TicketTest(TracTest):
         assert_equals(u'help', ticket.summary)
         assert_equals(u'some description', ticket.description)
         assert_equals(u'foo@site.example', ticket.cc)
+    
+    def test_can_return_parsed_cc_list(self):
+        ticket = Ticket.example(_session=self.session,
+            cc=u'foo,bar, baz.qux; me@site.example')
+        
+        assert_equals(('foo', 'bar', 'baz.qux', 'me@site.example'), ticket.cc_list())

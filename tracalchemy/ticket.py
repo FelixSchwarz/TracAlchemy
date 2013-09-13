@@ -21,6 +21,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import re
+
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Query
@@ -81,5 +83,14 @@ class Ticket(Base):
         columns = list(Ticket.__mapper__.columns)
         settings = map(lambda column: column.name + '=' + repr(getattr(self, column.name)), columns)
         return 'Ticket(%s)' % ', '.join(settings)
-
+    
+    def cc_list(self):
+        # --- copied from trac.web.Chrome -------------------------------------
+        ccs = []
+        for cc in re.split(r'[;,]', self.cc):
+            cc = cc.strip()
+            if cc:
+                ccs.append(cc)
+        return tuple(ccs)
+        # --- end of copy -----------------------------------------------------
 
