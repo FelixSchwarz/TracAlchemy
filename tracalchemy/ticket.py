@@ -21,14 +21,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import re
-
 from sqlalchemy import BigInteger, Integer, UnicodeText
 from sqlalchemy.orm import mapper, relationship, Query
 from sqlalchemy.schema import (Column, ForeignKey, Index, PrimaryKeyConstraint,
     Table)
 
-from tracalchemy.model_util import metadata
+from tracalchemy.model_util import metadata, split_cc_list
 
 
 __all__ = ['Ticket']
@@ -90,14 +88,7 @@ class Ticket(object):
         return 'Ticket(%s)' % ', '.join(settings)
     
     def cc_list(self):
-        # --- copied from trac.web.Chrome -------------------------------------
-        ccs = []
-        for cc in re.split(r'[;,]', self.cc):
-            cc = cc.strip()
-            if cc:
-                ccs.append(cc)
-        return tuple(ccs)
-        # --- end of copy -----------------------------------------------------
+        return split_cc_list(self.cc)
 
 
 mapper(Ticket, ticket_table)

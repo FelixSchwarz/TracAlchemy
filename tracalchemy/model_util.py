@@ -21,9 +21,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import re
+
 from sqlalchemy.schema import MetaData
 
-__all__ = ['metadata']
+__all__ = ['metadata', 'split_cc_list']
 
 
 metadata = MetaData()
+
+def split_cc_list(string_list):
+    if string_list is None:
+        return ()
+    # --- copied from trac.web.Chrome -----------------------------------------
+    ccs = []
+    for cc in re.split(r'[;,]', string_list):
+        cc = cc.strip()
+        if cc:
+            ccs.append(cc)
+    return tuple(ccs)
+    # --- end of copy ---------------------------------------------------------
