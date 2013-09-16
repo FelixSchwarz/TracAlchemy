@@ -118,7 +118,9 @@ ticket_change_table = Table('ticket_change', metadata,
 )
 
 class TicketChange(object):
-    pass
+    @classmethod
+    def query(cls, session):
+        return session.query(cls)
 
 
 mapper(TicketChange, ticket_change_table,
