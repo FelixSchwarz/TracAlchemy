@@ -114,4 +114,17 @@ class TicketTest(TracTest):
         assert_equals(u'comment', fourth.field)
         assert_equals(u'2', fourth.oldvalue)
         assert_equals('rephrase description', fourth.newvalue)
+    
+    def test_can_store_custom_fields(self):
+        self.create_custom_field('foo', 'text')
+        
+        summary = u'Ticket with custom field'
+        ticket = Ticket.example(_session=self.session, summary=summary)
+        ticket.custom[u'foo'] = u'bar'
+        self.session.add(ticket)
+        self.session.commit()
+        
+        trac_ticket = TracTicket(env=self.env, tkt_id=ticket.id)
+        assert_equals(summary, trac_ticket['summary'])
+        assert_equals('bar', trac_ticket[u'foo'])
 

@@ -22,7 +22,9 @@
 # THE SOFTWARE.
 
 from sqlalchemy import BigInteger, Integer, UnicodeText
-from sqlalchemy.orm import mapper, relationship, Query
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.orm import mapper, relation, relationship, Query
+from sqlalchemy.orm.collections import attribute_mapped_collection
 from sqlalchemy.schema import (Column, ForeignKey, Index, PrimaryKeyConstraint,
     Table)
 
@@ -55,12 +57,24 @@ ticket_table = Table('ticket', metadata,
     Index('ticket_status_idx', 'status'),
 )
 
+ticket_custom_table = Table('ticket_custom', metadata,
+    Column('ticket', Integer, ForeignKey('ticket.id'), primary_key=True, nullable=False),
+    Column('name', UnicodeText, primary_key=True, nullable=False),
+    Column('value', UnicodeText)
+)
+
+class TicketCustom(object):
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
 
 class TicketQuery(Query):
     def by_id(self, ticket_id):
         return self.filter(Ticket.id == ticket_id)
 
 class Ticket(object):
+    custom = association_proxy('_custom', 'name', creator=TicketCustom)
+    
     @classmethod
     def query(cls, session):
         return TicketQuery([cls], session=session)
@@ -91,7 +105,16 @@ class Ticket(object):
         return split_cc_list(self.cc)
 
 
-mapper(Ticket, ticket_table)
+mapper(TicketCustom, ticket_custom_table)
+
+mapper(Ticket, ticket_table,
+    properties={
+        '_custom': relation(
+            TicketCustom,
+            collection_class=attribute_mapped_collection('name'),
+            passive_deletes=True,
+        ),
+})
 
 # -----------------------------------------------------------------------------
 
